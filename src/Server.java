@@ -7,8 +7,9 @@ import java.io.ObjectOutputStream;
 import java.util.concurrent.Executors;
 
 /**
- * This class is a SSL server object
- * Creates thread for each client
+ * SSL server
+ * This server users SSL sockets to communicate with user
+ * For every user new thread i created
  */
 public class Server {
     private SSLServerSocket server;
@@ -46,38 +47,46 @@ public class Server {
     }
 
     /**
-     * Launch server
+     * Launches server - start socket creation and start method for accepting connections
      */
     public void launch(){
-        try{
-            createServerSocket();
-            acceptConnections();
-        }catch (Exception ex){
-            OutputToConsole.printErrorMessageToConsole(ex.getMessage());
-        }
+        createServerSocket();
+        acceptConnections();
     }
 
-    private void createServerSocket() throws Exception{
+    /**
+     * Creates SSL Server socket
+     * In case of exception prints error message and closes program
+     */
+    private void createServerSocket(){
         try{
             SSLServerSocketFactory factory = (SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
             server = (SSLServerSocket)factory.createServerSocket(port, queueLimit);
+            //server.setNeedClientAuth(true);
 
             OutputToConsole.printMessageToConsole("Server started!");
         }catch(IOException ex){
-            ex.printStackTrace();
             OutputToConsole.printErrorMessageToConsole("Server could not start!");
+            System.exit(0);
         }
     }
 
-    private void acceptConnections() throws IOException{
+    private void acceptConnections(){
         OutputToConsole.printMessageToConsole("Waiting for connections...");
 
         while(true){
-            connection = (SSLSocket)server.accept();
-            createNewClientConnection();
+            try {
+                connection = (SSLSocket)server.accept();
+                createNewClientConnection();
+            } catch (IOException ex) {
+                OutputToConsole.printErrorMessageToConsole("Could not accept client!");
+            }
         }
     }
 
+    /**
+     * Creates new thread that will handle connected client
+     */
     private void createNewClientConnection(){
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             public void run() {
