@@ -1,3 +1,7 @@
+package model;
+
+import util.OutputToConsole;
+
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -15,7 +19,7 @@ public class Server {
     private SSLServerSocket server;
     private SSLSocket connection;
     private int port = 6789;    //default port
-    private int queueLimit = 50;    //default user queue limit
+    private int queueLimit = 10;    //default user queue limit
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
 
@@ -66,11 +70,16 @@ public class Server {
 
             OutputToConsole.printMessageToConsole("Server started!");
         }catch(IOException ex){
+            ex.printStackTrace();
             OutputToConsole.printErrorMessageToConsole("Server could not start!");
             System.exit(0);
         }
     }
 
+    /**
+     * Accept connecting clients
+     * If fails - prints error and wait for a new one
+     */
     private void acceptConnections(){
         OutputToConsole.printMessageToConsole("Waiting for connections...");
 

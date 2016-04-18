@@ -1,6 +1,11 @@
+package model;
+
+import DTO.*;
+import util.OutputToConsole;
 import javax.net.ssl.SSLSocket;
 import java.io.*;
-import java.util.concurrent.Executors;
+import java.net.SocketException;
+import java.util.ArrayList;
 
 /**
  * This object handles communication with client that just connected to server
@@ -11,17 +16,21 @@ public class ClientConnection {
     private SSLSocket connection;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
-    private TransferObject response = new TransferObject("");
 
     /**
      * Client constructors calls method for IO-stream and message receiving
      * @param connection - SSL socket to client
      */
     public ClientConnection(SSLSocket connection) {
-        this.connection = connection;
-        OutputToConsole.printMessageToConsole("Client " + connection.getInetAddress().getHostName() + " is connected!");
-        setupIOStreams();
-        waitForMessages();
+        try{
+            this.connection = connection;
+            OutputToConsole.printMessageToConsole("Client " + connection.getInetAddress().getHostName() + " is connected!");
+            setupIOStreams();
+            waitForMessages();
+        }catch (Exception ex){
+            OutputToConsole.printErrorMessageToConsole(ex.getMessage());
+            closeStreamsAndConnection();
+        }
     }
 
     /**
@@ -29,7 +38,7 @@ public class ClientConnection {
      * In case of failure prints error message and calls clean up method to end
      * thread properly
      */
-    private void setupIOStreams(){
+    private void setupIOStreams() throws Exception{
         try{
             outputStream = new ObjectOutputStream(connection.getOutputStream());
             outputStream.flush();
@@ -37,8 +46,7 @@ public class ClientConnection {
             inputStream = new ObjectInputStream(connection.getInputStream());
             OutputToConsole.printMessageToConsole("IO stream are created!");
         }catch (IOException ex){
-            OutputToConsole.printErrorMessageToConsole("Could not create IO streams!");
-            closeStreamsAndConnection();
+            throw new Exception("Could not create IO streams!");
         }
     }
 
@@ -49,28 +57,35 @@ public class ClientConnection {
      * (For now it all so calls sendMessage with user input - just for testing purposes)
      */
     private void waitForMessages(){
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            public void run() {
-            while(true){
-                try{
-                    TransferObject received = (TransferObject)inputStream.readObject();
-                    OutputToConsole.printMessageToConsole("Message received: " + received.getMessage());
-
-                    response.setMessage(received.getMessage());
-                    sendMessage();
-                }catch (ClassNotFoundException CNFEx) {
-                    CNFEx.printStackTrace();
-                    OutputToConsole.printErrorMessageToConsole("Unknown receiving object type!");
-                }catch (EOFException ex){
-                    break;
-                } catch(IOException ioEx){
-                    OutputToConsole.printErrorMessageToConsole("Could not receive message!");
-                }
+        while(true){
+            try {
+                ClientServerTransferObject received = (ClientServerTransferObject) inputStream.readObject();
+                new Thread(() -> handleRequest(received)).start();
+            }catch(SocketException socEx){
+                OutputToConsole.printErrorMessageToConsole("Connection error!");
+                break;
+            }catch (ClassNotFoundException CNFEx) {
+                CNFEx.printStackTrace();
+                OutputToConsole.printErrorMessageToConsole("Unknown receiving object type!");
+            }catch (EOFException ex){
+                break;
+            } catch(IOException ioEx){
+                OutputToConsole.printErrorMessageToConsole("Could not receive message!");
             }
-            closeStreamsAndConnection();
-            }
-        });
+        }
+        closeStreamsAndConnection();
+    }
 
+    /**
+     * Handles user request in another thread
+     * @param request - user request
+     */
+    private void handleRequest(ClientServerTransferObject request){
+        if(request instanceof GetDataRequest){
+            ArrayList<Device> devices = new ArrayList<Device>();
+            devices.add(new Device(1, "Lampa 1", (byte)0));
+            sendMessage(new Devices(devices));
+        }
     }
 
     /**
@@ -79,18 +94,14 @@ public class ClientConnection {
      * In case of error prints error message
      * In both cases thread terminates
      */
-    private void sendMessage(){
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            public void run() {
-                try {
-                    outputStream.writeObject(response);
-                    outputStream.flush();
-                    OutputToConsole.printMessageToConsole("Message sent!");
-                } catch (IOException ex) {
-                    OutputToConsole.printErrorMessageToConsole("Failed to send message!");
-                }
-            }
-        });
+    private void sendMessage(ClientServerTransferObject devices){
+        try {
+            outputStream.writeObject(devices);
+            outputStream.flush();
+            OutputToConsole.printMessageToConsole("Message sent!");
+        } catch (IOException ex) {
+            OutputToConsole.printErrorMessageToConsole("Failed to send message!");
+        }
     }
 
     /**

@@ -1,3 +1,5 @@
+package util;
+
 /**
  * Simple static class for outputting regular and error messages to console
  */
