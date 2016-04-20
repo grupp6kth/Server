@@ -2,12 +2,15 @@ package model;
 
 import util.OutputToConsole;
 
+import javax.net.ServerSocketFactory;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.Executors;
 
 /**
@@ -16,8 +19,10 @@ import java.util.concurrent.Executors;
  * For every user new thread i created
  */
 public class Server {
-    private SSLServerSocket server;
-    private SSLSocket connection;
+    /*private SSLServerSocket server;
+    private SSLSocket connection;*/
+    private ServerSocket server;
+    private Socket connection;
     private int port = 6789;    //default port
     private int queueLimit = 10;    //default user queue limit
     private ObjectInputStream inputStream;
@@ -59,13 +64,16 @@ public class Server {
     }
 
     /**
-     * Creates SSL Server socket
+     * Creates SSL Server socket (changed for testing purposes to usual server socket)
      * In case of exception prints error message and closes program
      */
     private void createServerSocket(){
         try{
-            SSLServerSocketFactory factory = (SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
-            server = (SSLServerSocket)factory.createServerSocket(port, queueLimit);
+            /*SSLServerSocketFactory factory = (SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
+            server = (SSLServerSocket)factory.createServerSocket(port, queueLimit);*/
+
+            ServerSocketFactory factory = ServerSocketFactory.getDefault();
+            server = factory.createServerSocket(port, queueLimit);
             //server.setNeedClientAuth(true);
 
             OutputToConsole.printMessageToConsole("Server started!");
@@ -85,7 +93,8 @@ public class Server {
 
         while(true){
             try {
-                connection = (SSLSocket)server.accept();
+                /*connection = (SSLSocket)server.accept();*/
+                connection = server.accept();
                 createNewClientConnection();
             } catch (IOException ex) {
                 OutputToConsole.printErrorMessageToConsole("Could not accept client!");

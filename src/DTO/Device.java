@@ -2,21 +2,21 @@ package DTO;
 
 /**
  * This DTO contains information about a device
- * This object contains device id, device name and device status (on/off)
+ * This object contains device id, device name and device status (on/off == true/false)
  * and standard constructor, getters and setters
  */
 public class Device extends ClientServerTransferObject{
     private int id;
     private String name;
-    private byte status;
+    private boolean status;
 
     /**
      * Constructor for a Device
      * @param id - int device id
      * @param name - String device name
-     * @param status - byte device status: 0 - device off, 1 - device on
+     * @param status - byte device status: true - device off, false - device on
      */
-    public Device(int id, String name, byte status) {
+    public Device(int id, String name, boolean status) {
         this.id = id;
         this.name = name;
         this.status = status;
@@ -55,7 +55,7 @@ public class Device extends ClientServerTransferObject{
     /**
      * @return byte device status (on/off)
      */
-    public byte getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
@@ -63,7 +63,7 @@ public class Device extends ClientServerTransferObject{
      * Overwrites old status value with a new one
      * @param status - new byte device status (on/off)
      */
-    public void setStatus(byte status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

@@ -4,6 +4,7 @@ import DTO.*;
 import util.OutputToConsole;
 import javax.net.ssl.SSLSocket;
 import java.io.*;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
@@ -13,15 +14,16 @@ import java.util.ArrayList;
  * object type - TransferObject
  */
 public class ClientConnection {
-    private SSLSocket connection;
+    /*private SSLSocket connection;*/
+    private Socket connection;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
 
     /**
      * Client constructors calls method for IO-stream and message receiving
-     * @param connection - SSL socket to client
+     * @param connection - SSL socket to client(changed for testing purposes to usual socket)
      */
-    public ClientConnection(SSLSocket connection) {
+    public ClientConnection(Socket connection) {
         try{
             this.connection = connection;
             OutputToConsole.printMessageToConsole("Client " + connection.getInetAddress().getHostName() + " is connected!");
@@ -83,7 +85,8 @@ public class ClientConnection {
     private void handleRequest(ClientServerTransferObject request){
         if(request instanceof GetDataRequest){
             ArrayList<Device> devices = new ArrayList<Device>();
-            devices.add(new Device(1, "Lampa 1", (byte)0));
+            devices.add(new Device(1, "Lampa 1", true));
+            devices.add(new Device(2, "Lampa 2", false));
             sendMessage(new Devices(devices));
         }
     }

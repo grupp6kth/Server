@@ -20,8 +20,15 @@ public class Devices extends ClientServerTransferObject{
     /**
      * @return ArrayList of Device objects
      */
-    public ArrayList<Device> getDevices() {
+    public ArrayList<Device> getDeviceList() {
         return devices;
+    }
+
+    /**
+     * @return int - number of devices
+     */
+    public int getNumberOfDevices(){
+        return devices.size();
     }
 
     /**
