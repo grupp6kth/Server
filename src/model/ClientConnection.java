@@ -88,6 +88,11 @@ public class ClientConnection {
             devices.add(new Device(1, "Lampa 1", true));
             devices.add(new Device(2, "Lampa 2", false));
             sendMessage(new Devices(devices));
+        }else if(request instanceof ControlDevice){
+            System.out.println("Switch device with: " + ((ControlDevice) request).getDeviceID());
+        }else if(request instanceof Device){
+            System.out.println("Add new device: \nName: " + ((Device) request).getName() +
+                    "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
         }
     }
 
