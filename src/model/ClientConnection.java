@@ -18,6 +18,7 @@ public class ClientConnection {
     private Socket connection;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
+    private Devices testDevices;
 
     /**
      * Client constructors calls method for IO-stream and message receiving
@@ -84,16 +85,42 @@ public class ClientConnection {
      */
     private void handleRequest(ClientServerTransferObject request){
         if(request instanceof GetDataRequest){
+            //test code
             ArrayList<Device> devices = new ArrayList<Device>();
-            devices.add(new Device(1, "Lampa 1", true));
-            devices.add(new Device(2, "Lampa 2", false));
-            sendMessage(new Devices(devices));
+            devices.add(new Device(1, "Lampa 1", false));
+            devices.add(new Device(2, "Lampa 2", true));
+            this.testDevices = new Devices(devices);
+            //end test code
+
+            sendMessage(testDevices);
         }else if(request instanceof ControlDevice){
-            System.out.println("Switch device with: " + ((ControlDevice) request).getDeviceID());
+            //test code
+            int deviceId = ((ControlDevice) request).getDeviceID();
+            System.out.println("Switching device with id: " + deviceId);
+            Device device = testDevices.getDeviceList().get(deviceId-1);
+            String newStatus;
+            if(device.getStatus())
+                newStatus = "off";
+            else
+                newStatus = "on";
+
+            String command = "tdtool --" + newStatus + " " + deviceId;
+            //end test code
+            executeShellCommand(command);
         }else if(request instanceof Device){
             System.out.println("Add new device: \nName: " + ((Device) request).getName() +
                     "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
         }
+    }
+
+    /**
+     * Calls shell executor to execute a command
+     * @param command - String shell command
+     */
+    private void executeShellCommand(String command){
+        ExecuteShellCommand shell = new ExecuteShellCommand();
+        String output = shell.executeCommand(command);
+        System.out.println("Output from shell: " + output);
     }
 
     /**
