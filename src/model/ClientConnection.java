@@ -88,25 +88,14 @@ public class ClientConnection {
             //test code
             ArrayList<Device> devices = new ArrayList<Device>();
             devices.add(new Device(1, "Lampa 1", false));
-            devices.add(new Device(2, "Lampa 2", true));
+            devices.add(new Device(2, "Lampa 2", false));
             this.testDevices = new Devices(devices);
             //end test code
 
             sendMessage(testDevices);
         }else if(request instanceof ControlDevice){
-            //test code
-            int deviceId = ((ControlDevice) request).getDeviceID();
-            System.out.println("Switching device with id: " + deviceId);
-            Device device = testDevices.getDeviceList().get(deviceId-1);
-            String newStatus;
-            if(device.getStatus())
-                newStatus = "off";
-            else
-                newStatus = "on";
-
-            String command = "tdtool --" + newStatus + " " + deviceId;
-            //end test code
-            executeShellCommand(command);
+            TelldusAPI telldus = new TelldusAPI();
+            telldus.changeDeviceStatus((ControlDevice)request);
         }else if(request instanceof Device){
             System.out.println("Add new device: \nName: " + ((Device) request).getName() +
                     "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
