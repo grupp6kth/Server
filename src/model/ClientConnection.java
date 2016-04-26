@@ -31,6 +31,7 @@ public class ClientConnection {
             setupIOStreams();
             waitForMessages();
         }catch (Exception ex){
+            ex.printStackTrace();
             OutputToConsole.printErrorMessageToConsole(ex.getMessage());
             closeStreamsAndConnection();
         }
@@ -91,7 +92,6 @@ public class ClientConnection {
             devices.add(new Device(2, "Lampa 2", false));
             this.testDevices = new Devices(devices);
             //end test code
-
             sendMessage(testDevices);
         }else if(request instanceof ControlDevice){
             TelldusAPI telldus = new TelldusAPI();
@@ -100,16 +100,6 @@ public class ClientConnection {
             System.out.println("Add new device: \nName: " + ((Device) request).getName() +
                     "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
         }
-    }
-
-    /**
-     * Calls shell executor to execute a command
-     * @param command - String shell command
-     */
-    private void executeShellCommand(String command){
-        ExecuteShellCommand shell = new ExecuteShellCommand();
-        String output = shell.executeCommand(command);
-        System.out.println("Output from shell: " + output);
     }
 
     /**

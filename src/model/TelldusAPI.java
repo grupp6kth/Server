@@ -8,11 +8,23 @@ import java.util.ArrayList;
 
 public class TelldusAPI {
     private Devices deviceList;
+    private static TelldusAPI instance = null;
 
-    public void updateDeviceList() {
+    protected TelldusAPI() {
+        // To make it impossible to instantiate
+    }
+
+    public TelldusAPI getInstance() {
+        updateDeviceList();
+        if (instance == null)
+            instance = new TelldusAPI();
+
+        return instance;
+    }
+
+    public Devices updateDeviceList() {
         ExecuteShellCommand exe = new ExecuteShellCommand();
-        String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space for string manipulation
-        // Test code for debugging
+        String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
         //String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON type=device     id=2    name=Uttag      lastsentcommand=OFF ";
 
         ArrayList<Device> listOfDevices = new ArrayList<Device>();
@@ -45,6 +57,8 @@ public class TelldusAPI {
             Device device = new Device(id, name, status);
             listOfDevices.add(device);
         }
+        deviceList = new Devices(listOfDevices);
+        return deviceList;
     }
 
     public void changeDeviceStatus(ControlDevice request) {
