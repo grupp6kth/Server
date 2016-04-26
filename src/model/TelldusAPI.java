@@ -10,12 +10,11 @@ public class TelldusAPI {
     private Devices deviceList;
     private static TelldusAPI instance = null;
 
-    protected TelldusAPI() {
-        // To make it impossible to instantiate
+    private TelldusAPI() {
+        // To prevent instantiation
     }
 
-    public TelldusAPI getInstance() {
-        updateDeviceList();
+    public static TelldusAPI getInstance() {
         if (instance == null)
             instance = new TelldusAPI();
 
@@ -75,5 +74,23 @@ public class TelldusAPI {
 
         ExecuteShellCommand shell = new ExecuteShellCommand();
         shell.executeCommand(command);
+    }
+
+    public void learnDevice(Device device) {
+        updateDeviceList();
+        int newDeviceId = deviceList.getNumberOfDevices() + 1;
+        device.setId(newDeviceId);
+
+        String command = "echo 'device{\n   id=" + device.getId() +
+        "\n   name=\"" + device.getName() + "\"\n   protocol=\"" + device.getProtocol() + "\"\n   model=\"" + device.getModel() +
+        "\"\n   parameters{\n      house=\"A\"\n      unit=\"" + device.getId() + "\"\n   }\n}' >> /etc/tellstick.conf";
+
+        ExecuteShellCommand shell = new ExecuteShellCommand();
+        shell.executeCommand(command);
+        System.out.println("Tellstick.conf updated with new device: " + device.getId());
+
+        command = "tdtool -e " + device.getId();
+        shell.executeCommand(command);
+        System.out.println("Tellstick has synchronized with device: " + device.getId());
     }
 }

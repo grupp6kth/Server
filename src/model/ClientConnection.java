@@ -86,15 +86,10 @@ public class ClientConnection {
      */
     private void handleRequest(ClientServerTransferObject request){
         if(request instanceof GetDataRequest){
-            //test code
-            ArrayList<Device> devices = new ArrayList<Device>();
-            devices.add(new Device(1, "Lampa 1", false));
-            devices.add(new Device(2, "Lampa 2", false));
-            this.testDevices = new Devices(devices);
-            //end test code
-            sendMessage(testDevices);
+            TelldusAPI api = TelldusAPI.getInstance();
+            sendMessage(api.updateDeviceList());
         }else if(request instanceof ControlDevice){
-            TelldusAPI telldus = new TelldusAPI();
+            TelldusAPI telldus = TelldusAPI.getInstance();
             telldus.changeDeviceStatus((ControlDevice)request);
         }else if(request instanceof Device){
             System.out.println("Add new device: \nName: " + ((Device) request).getName() +
