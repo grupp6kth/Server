@@ -5,7 +5,7 @@ package DTO;
  * This object contains device id, device name and device status (on/off == true/false),
  * model(for example "selflearning-switch") and protocol (for example "arctech")
  */
-public class Device extends ClientServerTransferObject{
+public final class Device extends ClientServerTransferObject{
     private int id;
     private String name;
     private String protocol;
@@ -131,7 +131,8 @@ public class Device extends ClientServerTransferObject{
     /**
      * @return String representation of this DTO
      */
-    public String toString(){
+    @Override
+    public final String toString(){
         return "DeviceID : " + id +
                 " Device Name: " + name +
                 " Model " + model +
