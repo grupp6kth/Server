@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * and used as return object for users getAllDevices request
  */
 public final class Devices extends ClientServerTransferObject{
-    private ArrayList<Device> devices;
+    private ArrayList<Device> devices = new ArrayList<>();
 
     /**
      * Constructor sets new devices value

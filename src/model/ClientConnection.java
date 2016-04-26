@@ -18,7 +18,8 @@ public class ClientConnection {
     private Socket connection;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
-    private Devices testDevices;
+    private TelldusAPI telldusAPI = TelldusAPI.getInstance();
+    private DatabaseHandler DBHandler = DatabaseHandler.getInstance();
 
     /**
      * Client constructors calls method for IO-stream and message receiving
@@ -64,6 +65,7 @@ public class ClientConnection {
         while(true){
             try {
                 ClientServerTransferObject received = (ClientServerTransferObject) inputStream.readObject();
+                System.out.println("Message received!");
                 new Thread(() -> handleRequest(received)).start();
             }catch(SocketException socEx){
                 OutputToConsole.printErrorMessageToConsole("Connection error!");
@@ -86,15 +88,92 @@ public class ClientConnection {
      */
     private void handleRequest(ClientServerTransferObject request){
         if(request instanceof GetDataRequest){
-            TelldusAPI api = TelldusAPI.getInstance();
-            sendMessage(api.updateDeviceList());
+            handleDataRequests((GetDataRequest) request);
         }else if(request instanceof ControlDevice){
-            TelldusAPI telldus = TelldusAPI.getInstance();
-            telldus.changeDeviceStatus((ControlDevice)request);
+            telldusAPI.changeDeviceStatus((ControlDevice)request);
         }else if(request instanceof Device){
             System.out.println("Add new device: \nName: " + ((Device) request).getName() +
                     "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
         }
+    }
+
+    /**
+     * Handles specifically request where client requires information
+     * @param request - user request of type GetDataRequest
+     */
+    private void handleDataRequests(GetDataRequest request){
+        if(request.getType().equals("devices")){
+            //sendMessage(telldusAPI.updateDeviceList());
+            sendMessage(getFakeData());
+        }else if(request.getType().equals("schedule")){
+            sendMessage(DBHandler.getSchedule());
+        }
+    }
+
+    private Devices getFakeData(){
+        ArrayList<Device> devices = new ArrayList<>();
+        devices.add(new Device(1, "Lamp_1", true));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(2, "Lamp_2", false));
+        return new Devices(devices);
     }
 
     /**
