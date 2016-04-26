@@ -5,7 +5,7 @@ package DTO;
  * shall change its status - on/off
  * Client just send this object with device id
  */
-public class ControlDevice extends ClientServerTransferObject{
+public final class ControlDevice extends ClientServerTransferObject{
     private int deviceID;
 
     /**
