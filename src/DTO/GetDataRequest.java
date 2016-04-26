@@ -5,7 +5,7 @@ package DTO;
  * String field dataType is used to tell which type of data client require (temporary)
  * Types of requests: devices, schedule
  */
-public class GetDataRequest extends ClientServerTransferObject{
+public final class GetDataRequest extends ClientServerTransferObject{
     private String dataType;
 
     /**
