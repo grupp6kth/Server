@@ -102,11 +102,15 @@ public class ClientConnection {
      * @param request - user request of type GetDataRequest
      */
     private void handleDataRequests(GetDataRequest request){
-        if(request.getType().equals("devices")){
-            //sendMessage(telldusAPI.updateDeviceList());
-            sendMessage(getFakeData());
-        }else if(request.getType().equals("schedule")){
-            sendMessage(DBHandler.getSchedule());
+        switch (request.getType()){
+            case DEVICES:
+                //sendMessage(telldusAPI.updateDeviceList());
+                sendMessage(getFakeData());
+            break;
+
+            case SCHEDULE:
+                sendMessage(DBHandler.getSchedule());
+            break;
         }
     }
 
@@ -114,65 +118,22 @@ public class ClientConnection {
         ArrayList<Device> devices = new ArrayList<>();
         devices.add(new Device(1, "Lamp_1", true));
         devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(2, "Lamp_2", false));
+        devices.add(new Device(3, "Lamp_3", false));
+        devices.add(new Device(4, "Lamp_4", false));
+        devices.add(new Device(5, "Lamp_5", false));
+        devices.add(new Device(6, "Lamp_6", true));
+        devices.add(new Device(7, "Lamp_7", false));
+        devices.add(new Device(8, "Lamp_8", true));
+        devices.add(new Device(9, "Lamp_9", false));
+        devices.add(new Device(10, "Lamp_10", false));
+        devices.add(new Device(11, "Lamp_11", true));
+        devices.add(new Device(12, "Lamp_12", true));
+        devices.add(new Device(13, "Lamp_13", true));
+        devices.add(new Device(14, "Lamp_14", false));
+        devices.add(new Device(15, "Lamp_15", false));
+        devices.add(new Device(16, "Lamp_16", false));
+        devices.add(new Device(17, "Lamp_17", true));
+
         return new Devices(devices);
     }
 

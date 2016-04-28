@@ -6,28 +6,35 @@ package DTO;
  * Types of requests: devices, schedule
  */
 public final class GetDataRequest extends ClientServerTransferObject{
-    private String dataType;
+    private RequestTypes requestTypes;
 
     /**
-     * Constructor - initializes data type
-     * @param type - String type
+     * Type of requests available
      */
-    public GetDataRequest(String type){
-        this.dataType = type;
+    public enum RequestTypes{
+        DEVICES, SCHEDULE
     }
 
     /**
-     * @return String data type
+     * Constructor - initializes data type
+     * @param type - one of types existing in RequestTypes
      */
-    public String getType() {
-        return dataType;
+    public GetDataRequest(RequestTypes type){
+        this.requestTypes = type;
+    }
+
+    /**
+     * @return RequestTypes data type
+     */
+    public RequestTypes getType() {
+        return requestTypes;
     }
 
     /**
      * Overwrites old dataType value with a new one
-     * @param dataType - new String dataType value
+     * @param dataType - new RequestTypes dataType value
      */
-    public void setType(String dataType) {
-        this.dataType = dataType;
+    public void setType(RequestTypes dataType) {
+        this.requestTypes = dataType;
     }
 }
