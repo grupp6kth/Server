@@ -18,7 +18,7 @@ public final class ScheduledEvent extends ClientServerTransferObject{
      * @param endDateTime - String representation of ending date and time when event should stop, it can be null
      * @param newDeviceStatus - String representation ...
      */
-    public ScheduledEvent(int deviceID, String deviceName, String startDateTime, String endDateTime, String endDate, String newDeviceStatus) {
+    public ScheduledEvent(int deviceID, String deviceName, String startDateTime, String endDateTime, String newDeviceStatus) {
         this.deviceID = deviceID;
         this.deviceName = deviceName;
         this.startDateTime = startDateTime;

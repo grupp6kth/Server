@@ -27,8 +27,8 @@ public class DatabaseHandler {
      */
     public Schedule getSchedule(){
         ArrayList<ScheduledEvent> schedule = new ArrayList<>();
-        schedule.add(new ScheduledEvent(3, "UlrikasLampa", "2016-09-11 11:33", "TÄND!!!!"));
-        schedule.add(new ScheduledEvent(3, "AlexandersLampa", "2016-09-11 11:53", "SLÄCK!!!!"));
+        schedule.add(new ScheduledEvent(3, "UlrikasLampa", "2016-09-11 11:33", null, "ON"));
+        schedule.add(new ScheduledEvent(4, "AlexandersLampa", "2016-09-11 11:53", "2016-09-11 11:55" , "OFF"));
         return new Schedule(schedule);
     }
 }
