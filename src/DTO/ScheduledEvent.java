@@ -6,21 +6,24 @@ package DTO;
 public final class ScheduledEvent extends ClientServerTransferObject{
     private int deviceID;
     private String deviceName;
-    private String scheduleDate;
-    private String scheduleDescription;
+    private String startDateTime;
+    private String endDateTime;
+    private String newDeviceStatus;
 
     /**
      * Constructor initializes values
      * @param deviceID - int device id number
      * @param deviceName - String name of the device
-     * @param scheduleDate - String representation of a date when event is scheduled to happen
-     * @param scheduleDescription - String representation ...
+     * @param startDateTime - String representation of start date and time when event should occur
+     * @param endDateTime - String representation of ending date and time when event should stop, it can be null
+     * @param newDeviceStatus - String representation ...
      */
-    public ScheduledEvent(int deviceID, String deviceName, String scheduleDate, String scheduleDescription) {
+    public ScheduledEvent(int deviceID, String deviceName, String startDateTime, String endDateTime, String endDate, String newDeviceStatus) {
         this.deviceID = deviceID;
         this.deviceName = deviceName;
-        this.scheduleDate = scheduleDate;
-        this.scheduleDescription = scheduleDescription;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.newDeviceStatus = newDeviceStatus;
     }
 
     public int getDeviceID() {
@@ -39,19 +42,27 @@ public final class ScheduledEvent extends ClientServerTransferObject{
         this.deviceName = deviceName;
     }
 
-    public String getScheduleDate() {
-        return scheduleDate;
+    public String getEndDateTime() {
+        return endDateTime;
     }
 
-    public void setScheduleDate(String scheduleDate) {
-        this.scheduleDate = scheduleDate;
+    public void setEndDateTime(String endDateTime) {
+        this.endDateTime = endDateTime;
     }
 
-    public String getScheduleDescription() {
-        return scheduleDescription;
+    public String getStartDateTime() {
+        return startDateTime;
     }
 
-    public void setScheduleDescription(String scheduleDescription) {
-        this.scheduleDescription = scheduleDescription;
+    public void setStartDateTime(String startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public String getNewDeviceStatus() {
+        return newDeviceStatus;
+    }
+
+    public void setNewDeviceStatus(String newDeviceStatus) {
+        this.newDeviceStatus = newDeviceStatus;
     }
 }
