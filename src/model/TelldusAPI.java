@@ -3,12 +3,14 @@ package model;
 import DTO.ControlDevice;
 import DTO.Device;
 import DTO.Devices;
+import interfaces.ChangeObserver;
 
 import java.util.ArrayList;
 
 public class TelldusAPI {
     private Devices deviceList;
     private static TelldusAPI instance = null;
+    private ArrayList<ChangeObserver> changeObservers = new ArrayList<>();
 
     private TelldusAPI() {
         // To prevent instantiation
@@ -19,6 +21,22 @@ public class TelldusAPI {
             instance = new TelldusAPI();
 
         return instance;
+    }
+
+    /**
+     * Adds new change observer that shall be notified when any changes on devices are performed
+     * @param changeObserver ChangeObserver instance
+     */
+    public void addDeviceChangesObserver(ChangeObserver changeObserver){
+        if(changeObserver != null)
+            changeObservers.add(changeObserver);
+    }
+
+    /**
+     * This method shall be called from all method in this class that perform changes on devices
+     */
+    private void notifyClientOnDeviceChange(){
+        changeObservers.forEach(ChangeObserver::devicesChanged);
     }
 
     public Devices updateDeviceList() {

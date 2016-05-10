@@ -1,6 +1,7 @@
 package model;
 
 import DTO.*;
+import interfaces.ChangeObserver;
 import util.OutputToConsole;
 import javax.net.ssl.SSLSocket;
 import java.io.*;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * This object handles IO steams: receiving and sending messages using specified
  * object type - TransferObject
  */
-public class ClientConnection {
+public class ClientConnection implements ChangeObserver{
     /*private SSLSocket connection;*/
     private Socket connection;
     private ObjectInputStream inputStream;
@@ -151,6 +152,23 @@ public class ClientConnection {
         } catch (IOException ex) {
             OutputToConsole.printErrorMessageToConsole("Failed to send message!");
         }
+    }
+
+    /**
+     * This method will be used to notify all clients that device list or status have changed
+     */
+    @Override
+    public void devicesChanged() {
+        sendMessage(getFakeData());
+    }
+
+    /**
+     * This method will be user to notify all clients that schedule have changed: for example that
+     * new event is added or some other is removed or changed
+     */
+    @Override
+    public void scheduleChanged() {
+        sendMessage(DBHandler.getSchedule());
     }
 
     /**

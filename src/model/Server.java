@@ -14,7 +14,7 @@ import java.net.Socket;
 import java.util.concurrent.Executors;
 
 /**
- * SSL server
+ * SSL server (not SSL anymore)
  * This server users SSL sockets to communicate with user
  * For every user new thread i created
  */
