@@ -1,6 +1,7 @@
 package model;
 
 import DTO.*;
+import com.sun.deploy.util.SessionState;
 import interfaces.ChangeObserver;
 import util.OutputToConsole;
 import javax.net.ssl.SSLSocket;
@@ -88,13 +89,28 @@ public class ClientConnection implements ChangeObserver{
      * @param request - user request
      */
     private void handleRequest(ClientServerTransferObject request){
-        if(request instanceof GetDataRequest){
-            handleDataRequests((GetDataRequest) request);
-        }else if(request instanceof ControlDevice){
-            telldusAPI.changeDeviceStatus((ControlDevice)request);
-        }else if(request instanceof Device){
-            System.out.println("Add new device: \nName: " + ((Device) request).getName() +
-                    "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
+        switch (request.getTransferType()){
+            case GET:
+                if(request instanceof GetDataRequest)
+                    handleDataRequests((GetDataRequest) request);
+            break;
+
+            case CHANGE_DEVICE_STATUS:
+                if(request instanceof ControlDevice)
+                    telldusAPI.changeDeviceStatus((ControlDevice)request);
+            break;
+
+            case ADD_NEW_DEVICE:
+                if(request instanceof Device)
+                    System.out.println("Add new device: \nName: " + ((Device) request).getName() +
+                            "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
+            break;
+
+            case ADD_NEW_SCHEDULED_EVENT:
+                if(request instanceof ScheduledEvent)
+                    //DBHandler.addNewEvent();
+                    System.out.println("Adding new event!");
+            break;
         }
     }
 
@@ -105,12 +121,11 @@ public class ClientConnection implements ChangeObserver{
     private void handleDataRequests(GetDataRequest request){
         switch (request.getType()){
             case DEVICES:
-                //sendMessage(telldusAPI.updateDeviceList());
-                sendMessage(getFakeData());
+                devicesChanged();
             break;
 
             case SCHEDULE:
-                sendMessage(DBHandler.getSchedule());
+                scheduleChanged();
             break;
         }
     }
@@ -159,7 +174,9 @@ public class ClientConnection implements ChangeObserver{
      */
     @Override
     public void devicesChanged() {
-        sendMessage(getFakeData());
+        ClientServerTransferObject response = getFakeData();
+        response.setTransferType(ClientServerTransferObject.TransferType.DEVICE_LIST_RESPONSE);
+        sendMessage(response);
     }
 
     /**
@@ -168,7 +185,9 @@ public class ClientConnection implements ChangeObserver{
      */
     @Override
     public void scheduleChanged() {
-        sendMessage(DBHandler.getSchedule());
+        ClientServerTransferObject response = DBHandler.getSchedule();
+        response.setTransferType(ClientServerTransferObject.TransferType.SCHEDULE_RESPONSE);
+        sendMessage(response);
     }
 
     /**

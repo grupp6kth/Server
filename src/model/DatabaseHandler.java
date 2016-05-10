@@ -2,10 +2,8 @@ package model;
 
 import DTO.Schedule;
 import DTO.ScheduledEvent;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import interfaces.ChangeObserver;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -13,7 +11,7 @@ import java.util.ArrayList;
  * This singleton class handles connection, requests and responses from database
  * (FOR FUTURE: CREATE CONNECTION POOL INSTEAD)
  */
-public class DatabaseHandler {
+public final class DatabaseHandler {
     private static DatabaseHandler serverInstance = new DatabaseHandler();
     private final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private final String DB_URL = "jdbc:mysql://localhost:3306?autoReconnect=true&useSSL=false";
