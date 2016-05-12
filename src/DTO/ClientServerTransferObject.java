@@ -24,8 +24,8 @@ public class ClientServerTransferObject implements Serializable {
     }
 
     /**
-     * Sets type
-     * @param transferType
+     * Sets type of this transfer
+     * @param transferType - TransferType
      */
     public final void setTransferType(TransferType transferType) {
         this.transferType = transferType;

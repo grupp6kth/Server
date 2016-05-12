@@ -1,7 +1,6 @@
 package model;
 
 import DTO.*;
-import com.sun.deploy.util.SessionState;
 import interfaces.ChangeObserver;
 import util.OutputToConsole;
 import javax.net.ssl.SSLSocket;
