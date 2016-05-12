@@ -59,11 +59,11 @@ public final class DatabaseHandler {
 
             while(rs.next()){
                 schedule.add(new ScheduledEvent(
-                        rs.getInt("deviceID"),
-                        rs.getString("deviceName"),
-                        rs.getString("startDateTime"),
-                        rs.getString("endDateTime"),
-                        rs.getString("newDeviceStatus")));
+                        rs.getInt("device_id"),
+                        rs.getString("device_name"),
+                        rs.getString("start_date"),
+                        null,
+                        rs.getString("description")));
             }
         }catch (NullPointerException | SQLException ex){
             ex.printStackTrace();
