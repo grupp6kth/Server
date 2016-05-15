@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * and used as return object for users getAllDevices request
  */
 public final class Devices extends ClientServerTransferObject{
+    private static final long serialVersionUID = ClientServerTransferObject.serialVersionUID;
     private ArrayList<Device> devices = new ArrayList<>();
 
     /**

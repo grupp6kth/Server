@@ -6,6 +6,7 @@ package DTO;
  * Client just send this object with device id
  */
 public final class ControlDevice extends ClientServerTransferObject{
+    private static final long serialVersionUID = ClientServerTransferObject.serialVersionUID;
     private int deviceID;
 
     /**

@@ -6,6 +6,7 @@ package DTO;
  * Types of requests: devices, schedule
  */
 public final class GetDataRequest extends ClientServerTransferObject{
+    private static final long serialVersionUID = ClientServerTransferObject.serialVersionUID;
     private RequestTypes getRequestTypes;
 
     /**

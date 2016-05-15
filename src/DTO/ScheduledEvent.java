@@ -4,6 +4,7 @@ package DTO;
  * This DTO represents singular event in schedule
  */
 public final class ScheduledEvent extends ClientServerTransferObject{
+    private static final long serialVersionUID = ClientServerTransferObject.serialVersionUID;
     private int deviceID;
     private String deviceName;
     private String startDateTime;

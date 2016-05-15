@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * This DTO is created to send whole schedule between server and client
  */
 public final class Schedule extends ClientServerTransferObject{
+    private static final long serialVersionUID = ClientServerTransferObject.serialVersionUID;
     private ArrayList<ScheduledEvent> schedule = new ArrayList<>();
 
     /**

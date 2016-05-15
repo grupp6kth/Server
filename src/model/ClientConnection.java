@@ -68,16 +68,14 @@ public class ClientConnection implements ChangeObserver{
                 ClientServerTransferObject received = (ClientServerTransferObject) inputStream.readObject();
                 System.out.println("Message received!");
                 new Thread(() -> handleRequest(received)).start();
-            }catch(SocketException socEx){
-                OutputToConsole.printErrorMessageToConsole("Connection error!");
+            }catch(SocketException | EOFException socEx){
                 break;
-            }catch (ClassNotFoundException CNFEx) {
+            }catch (ClassNotFoundException | ClassCastException | InvalidClassException CNFEx) {
                 CNFEx.printStackTrace();
-                OutputToConsole.printErrorMessageToConsole("Unknown receiving object type!");
-            }catch (EOFException ex){
-                break;
-            } catch(IOException ioEx){
+                OutputToConsole.printErrorMessageToConsole("Received unknown object type!");
+            } catch(Exception ioEx){
                 OutputToConsole.printErrorMessageToConsole("Could not receive message!");
+                ioEx.printStackTrace();
             }
         }
         closeStreamsAndConnection();

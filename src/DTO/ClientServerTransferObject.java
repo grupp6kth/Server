@@ -7,6 +7,7 @@ import java.io.Serializable;
  * communication between client and server
  */
 public class ClientServerTransferObject implements Serializable {
+    static final long serialVersionUID = 1043517281335403085L;
     private TransferType transferType;
 
     /**

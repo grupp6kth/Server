@@ -6,6 +6,7 @@ package DTO;
  * model(for example "selflearning-switch") and protocol (for example "arctech")
  */
 public final class Device extends ClientServerTransferObject{
+    private static final long serialVersionUID = ClientServerTransferObject.serialVersionUID;
     private int id;
     private String name;
     private String protocol;
