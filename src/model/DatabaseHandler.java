@@ -62,7 +62,7 @@ public final class DatabaseHandler {
                         rs.getInt("deviceID"),
                         rs.getString("deviceName"),
                         rs.getString("startDateTime").substring(0,16),
-                        rs.getString("endDateTime").substring(0,16),
+                        rs.getString("endDateTime"),
                         rs.getString("newDeviceStatus")));
             }
         }catch (NullPointerException | SQLException ex){

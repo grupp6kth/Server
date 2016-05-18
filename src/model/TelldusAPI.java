@@ -44,8 +44,8 @@ public class TelldusAPI {
      */
     public Devices updateDeviceList() {
         ExecuteShellCommand exe = new ExecuteShellCommand();
-        //String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
-        String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON\ntype=device     id=2    name=Uttag      lastsentcommand=OFF\n";
+        String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
+        //String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON\ntype=device     id=2    name=Uttag      lastsentcommand=OFF\n";
 
         ArrayList<Device> listOfDevices = new ArrayList<>();
 
