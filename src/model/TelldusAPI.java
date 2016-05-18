@@ -44,15 +44,15 @@ public class TelldusAPI {
      */
     public Devices updateDeviceList() {
         ExecuteShellCommand exe = new ExecuteShellCommand();
-        String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
-        //String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON\n type=device     id=2    name=Uttag      lastsentcommand=OFF\n";
+        //String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
+        String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON\ntype=device     id=2    name=Uttag      lastsentcommand=OFF\n";
 
         ArrayList<Device> listOfDevices = new ArrayList<>();
 
         while(deviceListRaw.length() > 40) {
             //Get ID
             int idStart = deviceListRaw.indexOf("id");
-            deviceListRaw= deviceListRaw.substring(idStart + 3);
+            deviceListRaw = deviceListRaw.substring(idStart + 3);
             int idEnd = deviceListRaw.indexOf(" ");
             int id = Integer.parseInt(deviceListRaw.substring(0, idEnd));
 
@@ -72,6 +72,8 @@ public class TelldusAPI {
             {
                 status = true;
             }
+            int endOfLine = deviceListRaw.indexOf("\n");
+            deviceListRaw = deviceListRaw.substring(endOfLine + 1);
 
             // Create device object and add to list of devices
             Device device = new Device(id, name, status);
