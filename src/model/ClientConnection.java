@@ -98,9 +98,11 @@ public class ClientConnection implements ChangeObserver{
             break;
 
             case ADD_NEW_DEVICE:
-                if(request instanceof Device)
+                if(request instanceof Device) {
                     System.out.println("Add new device: \nName: " + ((Device) request).getName() +
                             "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
+		    telldusAPI.learnDevice((Device) request);
+		}
             break;
 
             case ADD_NEW_SCHEDULED_EVENT:

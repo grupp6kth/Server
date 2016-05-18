@@ -119,5 +119,6 @@ public class TelldusAPI {
         command = "tdtool -e " + device.getId();
         shell.executeCommand(command);
         System.out.println("Tellstick has synchronized with device: " + device.getId());
+	notifyClientOnDeviceChange();
     }
 }
