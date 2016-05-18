@@ -39,6 +39,9 @@ public class TelldusAPI {
         changeObservers.forEach(ChangeObserver::devicesChanged);
     }
 
+    /**
+     * Contacts OS and gets a new deviceList, updates class variable deviceList and returns list
+     */
     public Devices updateDeviceList() {
         ExecuteShellCommand exe = new ExecuteShellCommand();
         String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
@@ -78,12 +81,16 @@ public class TelldusAPI {
         return deviceList;
     }
 
+    /**
+     * Changes the status of device specified in the DTO
+     */
     public void changeDeviceStatus(ControlDevice request) {
+        updateDeviceList();
         int deviceId = request.getDeviceID();
         System.out.println("Switching device with id: " + deviceId);
-        Device device = deviceList.getDeviceList().get(deviceId-1);
+        Device device = deviceList.getDeviceList().get(deviceId - 1);
         String newStatus;
-        if(device.getStatus())
+        if (device.getStatus())
             newStatus = "off";
         else
             newStatus = "on";
