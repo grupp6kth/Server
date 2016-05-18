@@ -89,7 +89,7 @@ public class ClientConnection implements ChangeObserver{
         switch (request.getTransferType()){
             case GET:
                 if(request instanceof GetDataRequest)
-                    handleDataRequests((GetDataRequest) request);
+                    handleGetRequests((GetDataRequest) request);
             break;
 
             case CHANGE_DEVICE_STATUS:
@@ -115,7 +115,7 @@ public class ClientConnection implements ChangeObserver{
      * Handles specifically request where client requires information
      * @param request - user request of type GetDataRequest
      */
-    private void handleDataRequests(GetDataRequest request){
+    private void handleGetRequests(GetDataRequest request){
         switch (request.getType()){
             case DEVICES:
                 devicesChanged();
@@ -171,7 +171,7 @@ public class ClientConnection implements ChangeObserver{
      */
     @Override
     public void devicesChanged() {
-        ClientServerTransferObject response = getFakeData();
+        ClientServerTransferObject response = telldusAPI.updateDeviceList();
         response.setTransferType(ClientServerTransferObject.TransferType.DEVICE_LIST_RESPONSE);
         sendMessage(response);
     }
