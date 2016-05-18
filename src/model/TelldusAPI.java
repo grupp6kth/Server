@@ -45,9 +45,9 @@ public class TelldusAPI {
     public Devices updateDeviceList() {
         ExecuteShellCommand exe = new ExecuteShellCommand();
         String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
-        //String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON type=device     id=2    name=Uttag      lastsentcommand=OFF ";
+        //String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON\n type=device     id=2    name=Uttag      lastsentcommand=OFF\n";
 
-        ArrayList<Device> listOfDevices = new ArrayList<Device>();
+        ArrayList<Device> listOfDevices = new ArrayList<>();
 
         while(deviceListRaw.length() > 40) {
             //Get ID
@@ -65,7 +65,7 @@ public class TelldusAPI {
             // Get lastsentcommand
             int lastSentStart = deviceListRaw.indexOf("lastsent") + 16;
             deviceListRaw= deviceListRaw.substring(lastSentStart);
-            int lastSentEnd = deviceListRaw.indexOf(" ");
+            int lastSentEnd = deviceListRaw.indexOf("\n");
             String lastSent = deviceListRaw.substring(0, lastSentEnd);
             boolean status = false;
             if(lastSent.equals("ON"))
