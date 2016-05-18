@@ -31,6 +31,7 @@ public class ClientConnection implements ChangeObserver{
             this.connection = connection;
             OutputToConsole.printMessageToConsole("Client " + connection.getInetAddress().getHostName() + " is connected!");
             setupIOStreams();
+            DBHandler.addDeviceChangesObserver(this);
             waitForMessages();
         }catch (Exception ex){
             ex.printStackTrace();
@@ -101,14 +102,13 @@ public class ClientConnection implements ChangeObserver{
                 if(request instanceof Device) {
                     System.out.println("Add new device: \nName: " + ((Device) request).getName() +
                             "\nModel: " + ((Device) request).getModel() + "\nProtocol: " + ((Device) request).getProtocol());
-		    telldusAPI.learnDevice((Device) request);
-		}
+		            telldusAPI.learnDevice((Device) request);
+		        }
             break;
 
             case ADD_NEW_SCHEDULED_EVENT:
                 if(request instanceof ScheduledEvent)
-                    //DBHandler.addNewEvent();
-                    System.out.println("Adding new event!");
+                    DBHandler.insertEvent((ScheduledEvent)request);
             break;
         }
     }

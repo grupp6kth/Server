@@ -11,12 +11,14 @@ public class Startup {
         //System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
         //System.setProperty("javax.net.ssl.keyStorePassword", "password");   //just for testing
 
-        new Server(5821, 10).launch();
-
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             public void run() {
+                System.out.println("Starting");
                 new ScheduleExecutor();
             }
         });
+
+        new Server(5821, 10).launch();
+
     }
 }

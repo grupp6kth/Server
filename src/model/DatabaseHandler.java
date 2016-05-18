@@ -50,7 +50,7 @@ public final class DatabaseHandler {
         Connection conn = getConnection();
         Statement stmt = null;
         ResultSet rs = null;
-        String query = "SELECT * FROM scheduler.events";
+        String query = "SELECT * FROM scheduler.events ORDER BY startDateTime";
         ArrayList<ScheduledEvent> schedule = new ArrayList<>();
 
         try{
@@ -101,7 +101,7 @@ public final class DatabaseHandler {
             closeConnectionWithResultSet(conn, stmt, rs);
         }
 
-        return;
+        notifyClientOnScheduleChange();
     }
 
     /**
@@ -137,7 +137,8 @@ public final class DatabaseHandler {
             closeConnection(conn, stmt);
         }
 
-        return;
+        System.out.println("New event inserted!");
+        notifyClientOnScheduleChange();
     }
 
     /**
@@ -158,7 +159,7 @@ public final class DatabaseHandler {
             closeConnection(conn, stmt);
         }
 
-        return;
+        notifyClientOnScheduleChange();
     }
 
     /**
