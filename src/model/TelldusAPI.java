@@ -20,20 +20,21 @@ public class TelldusAPI {
         return instance;
     }
 
+    public void restartTelldus() {
+        ExecuteShellCommand shell = new ExecuteShellCommand();
+        shell.executeCommand("sudo service telldusd restart");
+
+    }
+
     /**
      * Adds new change observer that shall be notified when any changes on devices are performed
      * @param changeObserver ChangeObserver instance
      */
     public void addDeviceChangesObserver(ChangeObserver changeObserver){
-        if(changeObserver != null){
+        if(changeObserver != null)
             changeObservers.add(changeObserver);
-        }
     }
 
-    /**
-     * Removes observer from list of observers
-     * @param changeObserver - ChangeObserver reference
-     */
     public void removeDeviceChangesObserver(ChangeObserver changeObserver){
         if(changeObserver != null)
             changeObservers.remove(changeObserver);
@@ -60,13 +61,13 @@ public class TelldusAPI {
             //Get ID
             int idStart = deviceListRaw.indexOf("id");
             deviceListRaw = deviceListRaw.substring(idStart + 3);
-            int idEnd = deviceListRaw.indexOf(" ");
+            int idEnd = deviceListRaw.indexOf("\t");
             int id = Integer.parseInt(deviceListRaw.substring(0, idEnd));
 
             // Get name
             int nameStart = deviceListRaw.indexOf("name") + 5;
             deviceListRaw = deviceListRaw.substring(nameStart);
-            int nameEnd = deviceListRaw.indexOf(" ");
+            int nameEnd = deviceListRaw.indexOf("\t");
             String name = deviceListRaw.substring(0, nameEnd);
 
             // Get lastsentcommand
@@ -115,17 +116,20 @@ public class TelldusAPI {
         int newDeviceId = deviceList.getNumberOfDevices() + 1;
         device.setId(newDeviceId);
 
-        String command = "echo 'device{\n   id=" + device.getId() +
-        "\n   name=\"" + device.getName() + "\"\n   protocol=\"" + device.getProtocol() + "\"\n   model=\"" + device.getModel() +
-        "\"\n   parameters{\n      house=\"A\"\n      unit=\"" + device.getId() + "\"\n   }\n}' >> /etc/tellstick.conf";
+        String command = "\ndevice{\n   id=" + device.getId() +
+                "\n   name=\"" + device.getName() + "\"\n   protocol=\"" + device.getProtocol() + "\"\n   model=\"" + device.getModel() +
+                "\"\n   parameters{\n      house=\"A\"\n      unit=\"" + device.getId() + "\"\n   }\n}";
 
         ExecuteShellCommand shell = new ExecuteShellCommand();
-        shell.executeCommand(command);
+        shell.appendToEndOfFile("/etc/tellstick.conf", command);
         System.out.println("Tellstick.conf updated with new device: " + device.getId());
+
+        restartTelldus();
 
         command = "tdtool -e " + device.getId();
         shell.executeCommand(command);
         System.out.println("Tellstick has synchronized with device: " + device.getId());
-	notifyClientOnDeviceChange();
+        notifyClientOnDeviceChange();
     }
 }
+
