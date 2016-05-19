@@ -23,12 +23,6 @@ public class TelldusAPI {
         return instance;
     }
 
-    public void restartTelldus() {
-	ExecuteShellCommand shell = new ExecuteShellCommand();
-	shell.executeCommand("sudo service telldusd restart");
-
-    }
-
     /**
      * Adds new change observer that shall be notified when any changes on devices are performed
      * @param changeObserver ChangeObserver instance
@@ -50,36 +44,34 @@ public class TelldusAPI {
      */
     public Devices updateDeviceList() {
         ExecuteShellCommand exe = new ExecuteShellCommand();
-        String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
-        //String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON\ntype=device     id=2    name=Uttag      lastsentcommand=OFF\n";
+        //String deviceListRaw = exe.executeCommand("tdtool --list-devices") + " "; //tailing space to find End of line
+        String deviceListRaw = "type=device     id=1    name=Example-device     lastsentcommand=ON type=deviceid=2    name=Uttag      lastsentcommand=OFF ";
 
-        ArrayList<Device> listOfDevices = new ArrayList<>();
+        ArrayList<Device> listOfDevices = new ArrayList<Device>();
 
         while(deviceListRaw.length() > 40) {
             //Get ID
             int idStart = deviceListRaw.indexOf("id");
-            deviceListRaw = deviceListRaw.substring(idStart + 3);
-            int idEnd = deviceListRaw.indexOf("\t");
-	    int id = Integer.parseInt(deviceListRaw.substring(0, idEnd));
+            deviceListRaw= deviceListRaw.substring(idStart + 3);
+            int idEnd = deviceListRaw.indexOf(" ");
+            int id = Integer.parseInt(deviceListRaw.substring(0, idEnd));
 
             // Get name
             int nameStart = deviceListRaw.indexOf("name") + 5;
             deviceListRaw = deviceListRaw.substring(nameStart);
-            int nameEnd = deviceListRaw.indexOf("\t");
+            int nameEnd = deviceListRaw.indexOf(" ");
             String name = deviceListRaw.substring(0, nameEnd);
 
             // Get lastsentcommand
             int lastSentStart = deviceListRaw.indexOf("lastsent") + 16;
             deviceListRaw= deviceListRaw.substring(lastSentStart);
-            int lastSentEnd = deviceListRaw.indexOf("\n");
+            int lastSentEnd = deviceListRaw.indexOf(" ");
             String lastSent = deviceListRaw.substring(0, lastSentEnd);
             boolean status = false;
             if(lastSent.equals("ON"))
             {
                 status = true;
             }
-            int endOfLine = deviceListRaw.indexOf("\n");
-            deviceListRaw = deviceListRaw.substring(endOfLine + 1);
 
             // Create device object and add to list of devices
             Device device = new Device(id, name, status);
@@ -114,19 +106,16 @@ public class TelldusAPI {
         int newDeviceId = deviceList.getNumberOfDevices() + 1;
         device.setId(newDeviceId);
 
-        String command = "device{\n   id=" + device.getId() +
+        String command = "echo 'device{\n   id=" + device.getId() +
         "\n   name=\"" + device.getName() + "\"\n   protocol=\"" + device.getProtocol() + "\"\n   model=\"" + device.getModel() +
-        "\"\n   parameters{\n      house=\"A\"\n      unit=\"" + device.getId() + "\"\n   }\n}";
+        "\"\n   parameters{\n      house=\"A\"\n      unit=\"" + device.getId() + "\"\n   }\n}' >> /etc/tellstick.conf";
 
         ExecuteShellCommand shell = new ExecuteShellCommand();
-        shell.appendToEndOfFile("/etc/tellstick.conf", command);
+        shell.executeCommand(command);
         System.out.println("Tellstick.conf updated with new device: " + device.getId());
-
-	restartTelldus();
 
         command = "tdtool -e " + device.getId();
         shell.executeCommand(command);
         System.out.println("Tellstick has synchronized with device: " + device.getId());
-	notifyClientOnDeviceChange();
     }
 }

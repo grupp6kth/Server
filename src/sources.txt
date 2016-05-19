@@ -1,0 +1,16 @@
+./Startup.java
+./util/OutputToConsole.java
+./model/DatabaseHandler.java
+./model/Server.java
+./model/ScheduleExecutor.java
+./model/ExecuteShellCommand.java
+./model/TelldusAPI.java
+./model/ClientConnection.java
+./interfaces/ChangeObserver.java
+./DTO/Device.java
+./DTO/ScheduledEvent.java
+./DTO/ClientServerTransferObject.java
+./DTO/ControlDevice.java
+./DTO/Devices.java
+./DTO/Schedule.java
+./DTO/GetDataRequest.java

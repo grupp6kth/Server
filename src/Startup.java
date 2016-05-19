@@ -1,8 +1,9 @@
 import model.ScheduleExecutor;
 import model.Server;
-
+import model.TelldusAPI;
+import model.ExecuteShellCommand;
 import java.util.concurrent.Executors;
-
+import DTO.Device;
 /**
  * Start testing SSL server
  */
@@ -18,5 +19,9 @@ public class Startup {
                 new ScheduleExecutor();
             }
         });
-    }
+
+	//ExecuteShellCommand command = new ExecuteShellCommand();
+	//command.appendToEndOfFile("/etc/tellstick2.conf", "hej hej");
+
+	}
 }
