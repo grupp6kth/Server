@@ -20,7 +20,7 @@ public class ClientConnection implements ChangeObserver{
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
     private TelldusAPI telldusAPI = TelldusAPI.getInstance();
-    private DatabaseHandler DBHandler = DatabaseHandler.getInstance();
+    private DatabaseHandler dbHandler = DatabaseHandler.getInstance();
 
     /**
      * Client constructors calls method for IO-stream and message receiving
@@ -31,7 +31,8 @@ public class ClientConnection implements ChangeObserver{
             this.connection = connection;
             OutputToConsole.printMessageToConsole("Client " + connection.getInetAddress().getHostName() + " is connected!");
             setupIOStreams();
-            DBHandler.addDeviceChangesObserver(this);
+            dbHandler.addScheduleChangesObserver(this);
+            telldusAPI.addDeviceChangesObserver(this);
             waitForMessages();
         }catch (Exception ex){
             ex.printStackTrace();
@@ -108,7 +109,7 @@ public class ClientConnection implements ChangeObserver{
 
             case ADD_NEW_SCHEDULED_EVENT:
                 if(request instanceof ScheduledEvent)
-                    DBHandler.insertEvent((ScheduledEvent)request);
+                    dbHandler.insertEvent((ScheduledEvent)request);
             break;
         }
     }
@@ -127,29 +128,6 @@ public class ClientConnection implements ChangeObserver{
                 scheduleChanged();
             break;
         }
-    }
-
-    private Devices getFakeData(){
-        ArrayList<Device> devices = new ArrayList<>();
-        devices.add(new Device(1, "Lamp_1", true));
-        devices.add(new Device(2, "Lamp_2", false));
-        devices.add(new Device(3, "Lamp_3", false));
-        devices.add(new Device(4, "Lamp_4", false));
-        devices.add(new Device(5, "Lamp_5", false));
-        devices.add(new Device(6, "Lamp_6", true));
-        devices.add(new Device(7, "Lamp_7", false));
-        devices.add(new Device(8, "Lamp_8", true));
-        devices.add(new Device(9, "Lamp_9", false));
-        devices.add(new Device(10, "Lamp_10", false));
-        devices.add(new Device(11, "Lamp_11", true));
-        devices.add(new Device(12, "Lamp_12", true));
-        devices.add(new Device(13, "Lamp_13", true));
-        devices.add(new Device(14, "Lamp_14", false));
-        devices.add(new Device(15, "Lamp_15", false));
-        devices.add(new Device(16, "Lamp_16", false));
-        devices.add(new Device(17, "Lamp_17", true));
-
-        return new Devices(devices);
     }
 
     /**
@@ -184,7 +162,7 @@ public class ClientConnection implements ChangeObserver{
      */
     @Override
     public void scheduleChanged() {
-        ClientServerTransferObject response = DBHandler.getSchedule();
+        ClientServerTransferObject response = dbHandler.getSchedule();
         response.setTransferType(ClientServerTransferObject.TransferType.SCHEDULE_RESPONSE);
         sendMessage(response);
     }
@@ -201,6 +179,10 @@ public class ClientConnection implements ChangeObserver{
                 inputStream.close();
             if(connection != null)
                 connection.close();
+
+            dbHandler.removeScheduleChangesObserver(this);
+            telldusAPI.removeDeviceChangesObserver(this);
+
             Thread.currentThread().interrupt();
         }catch (Exception ex){
             ex.printStackTrace();

@@ -253,11 +253,20 @@ public final class DatabaseHandler {
 
     /**
      * Adds new change observer that shall be notified when any changes on schedule are performed
-     * @param changeObserver ChangeObserver instance
+     * @param changeObserver ChangeObserver reference
      */
-    public void addDeviceChangesObserver(ChangeObserver changeObserver){
+    public void addScheduleChangesObserver(ChangeObserver changeObserver){
         if(changeObserver != null)
             changeObservers.add(changeObserver);
+    }
+
+    /**
+     * Removes observer from list of observers
+     * @param changeObserver - ChangeObserver reference
+     */
+    public void removeScheduleChangesObserver(ChangeObserver changeObserver){
+        if(changeObserver != null)
+            changeObservers.remove(changeObserver);
     }
 
     /**

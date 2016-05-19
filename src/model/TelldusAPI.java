@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class TelldusAPI {
     private Devices deviceList;
-    private static TelldusAPI instance = null;
+    private static TelldusAPI instance = new TelldusAPI();
     private ArrayList<ChangeObserver> changeObservers = new ArrayList<>();
 
     private TelldusAPI() {
@@ -17,9 +17,6 @@ public class TelldusAPI {
     }
 
     public static TelldusAPI getInstance() {
-        if (instance == null)
-            instance = new TelldusAPI();
-
         return instance;
     }
 
@@ -28,8 +25,18 @@ public class TelldusAPI {
      * @param changeObserver ChangeObserver instance
      */
     public void addDeviceChangesObserver(ChangeObserver changeObserver){
-        if(changeObserver != null)
+        if(changeObserver != null){
             changeObservers.add(changeObserver);
+        }
+    }
+
+    /**
+     * Removes observer from list of observers
+     * @param changeObserver - ChangeObserver reference
+     */
+    public void removeDeviceChangesObserver(ChangeObserver changeObserver){
+        if(changeObserver != null)
+            changeObservers.remove(changeObserver);
     }
 
     /**
