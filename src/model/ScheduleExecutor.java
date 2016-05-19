@@ -29,13 +29,17 @@ public class ScheduleExecutor {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (eventTimePassed(DBHandler.getEarliestEvent().getStartDateTime()) && (DBHandler.getEarliestEvent().getEndDateTime() == null)) {
-                    telldusAPI.changeDeviceStatus(new ControlDevice(DBHandler.getEarliestEvent().getDeviceID())); //only switches devices.
-                    DBHandler.removeEvent(DBHandler.getEarliestEvent());  //remove event from DB after execution
+                try{
+                    if (eventTimePassed(DBHandler.getEarliestEvent().getStartDateTime()) && (DBHandler.getEarliestEvent().getEndDateTime() == null)) {
+                        telldusAPI.changeDeviceStatus(new ControlDevice(DBHandler.getEarliestEvent().getDeviceID())); //only switches devices.
+                        DBHandler.removeEvent(DBHandler.getEarliestEvent());  //remove event from DB after execution
 
-                } else if (eventTimePassed(DBHandler.getEarliestEvent().getStartDateTime()) && (DBHandler.getEarliestEvent().getEndDateTime() != null)) {
-                    telldusAPI.changeDeviceStatus(new ControlDevice(DBHandler.getEarliestEvent().getDeviceID())); //only switches devices.
-                    DBHandler.modifyEvent(DBHandler.getEarliestEvent()); //modify current event
+                    } else if (eventTimePassed(DBHandler.getEarliestEvent().getStartDateTime()) && (DBHandler.getEarliestEvent().getEndDateTime() != null)) {
+                        telldusAPI.changeDeviceStatus(new ControlDevice(DBHandler.getEarliestEvent().getDeviceID())); //only switches devices.
+                        DBHandler.modifyEvent(DBHandler.getEarliestEvent()); //modify current event
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
                 }
             }
         }, 1000, 1000);
