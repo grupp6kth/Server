@@ -3,6 +3,7 @@ package model;
 
 import DTO.ControlDevice;
 import DTO.Schedule;
+import DTO.ScheduledEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,17 +30,17 @@ public class ScheduleExecutor {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try{
-                    if (eventTimePassed(DBHandler.getEarliestEvent().getStartDateTime()) && (DBHandler.getEarliestEvent().getEndDateTime() == null)) {
-                        telldusAPI.changeDeviceStatus(new ControlDevice(DBHandler.getEarliestEvent().getDeviceID())); //only switches devices.
-                        DBHandler.removeEvent(DBHandler.getEarliestEvent());  //remove event from DB after execution
+                ScheduledEvent earliestEvent = DBHandler.getEarliestEvent();
 
-                    } else if (eventTimePassed(DBHandler.getEarliestEvent().getStartDateTime()) && (DBHandler.getEarliestEvent().getEndDateTime() != null)) {
-                        telldusAPI.changeDeviceStatus(new ControlDevice(DBHandler.getEarliestEvent().getDeviceID())); //only switches devices.
-                        DBHandler.modifyEvent(DBHandler.getEarliestEvent()); //modify current event
+                if(earliestEvent != null){
+                    if (eventTimePassed(earliestEvent.getStartDateTime()) && (earliestEvent.getEndDateTime() == null)) {
+                        telldusAPI.changeDeviceStatus(new ControlDevice(earliestEvent.getDeviceID())); //only switches devices.
+                        DBHandler.removeEvent(earliestEvent);  //remove event from DB after execution
+
+                    } else if (eventTimePassed(earliestEvent.getStartDateTime()) && (earliestEvent.getEndDateTime() != null)) {
+                        telldusAPI.changeDeviceStatus(new ControlDevice(earliestEvent.getDeviceID())); //only switches devices.
+                        DBHandler.modifyEvent(earliestEvent); //modify current event
                     }
-                }catch (Exception ex){
-                    ex.printStackTrace();
                 }
             }
         }, 1000, 1000);

@@ -109,6 +109,8 @@ public class TelldusAPI {
 
         ExecuteShellCommand shell = new ExecuteShellCommand();
         shell.executeCommand(command);
+
+        notifyClientOnDeviceChange();
     }
 
     public void learnDevice(Device device) {
